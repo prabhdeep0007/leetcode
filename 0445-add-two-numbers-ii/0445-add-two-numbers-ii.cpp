@@ -1,52 +1,53 @@
 class Solution {
 public:
-    ListNode * reverse(ListNode* n)
-    {
-        ListNode*prev=NULL;
-        while(n)
-        {
-            ListNode*nxt=n->next;
-            n->next=prev;
-            prev=n;
-            n=nxt;
-        }
-        return prev;
-    }
     ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
-        l1=reverse(l1);
-        l2=reverse(l2);
-        int sum,carry=0;
-        ListNode*dummy=new ListNode();
-        ListNode*temp=dummy;
-        while(l1&&l2)
-        {
-            sum=carry+l1->val+l2->val;
-            temp->next=new ListNode(sum%10);
-            carry=sum/10;
-            l1=l1->next;
-            l2=l2->next;
-            temp=temp->next;
-        }
+        stack<int> s1,s2,s3;
         while(l1)
         {
-            sum=carry+l1->val;
-            temp->next=new ListNode(sum%10);
-            carry=sum/10;
+            s1.push(l1->val);
             l1=l1->next;
-            temp=temp->next;
         }
         while(l2)
         {
-            sum=(carry+l2->val);
-            temp->next=new ListNode(sum%10);
-            carry=sum/10;
+            s2.push(l2->val);
             l2=l2->next;
-            temp=temp->next;
+        }
+        int sum,carry=0;
+        while(s1.size()&&s2.size())
+        {
+            sum=carry+s1.top()+s2.top();
+            s1.pop();
+            s2.pop();
+            s3.push(sum%10);
+            carry=sum/10;
+        }
+        while(s1.size())
+        {
+            sum=carry+s1.top();
+            s1.pop();
+            s3.push(sum%10);
+            carry=sum/10;
+        }
+        while(s2.size())
+        {
+            sum=(carry+s2.top());
+            s2.pop();
+            s3.push(sum%10);
+            carry=sum/10;
         }
         if(carry)
         {
-            temp->next=new ListNode(carry);
+            s3.push(carry);
         }
-        return reverse(dummy->next);
+        ListNode*head=new ListNode(s3.top());
+        ListNode *temp=head;
+        s3.pop();
+        while(s3.size())
+        {
+            head->next=new ListNode(s3.top());
+            head=head->next;
+            s3.pop();
+        }
+        return temp;
     }
 };

@@ -1,38 +1,30 @@
 class Solution {
 public:
-    pair<int, int> solveMem(vector<int>& nums, int curr, int prev, vector<vector<pair<int, int>>>& dp) {
-        if (curr == nums.size()) return make_pair(0, 1);
-
-        if (dp[curr][prev + 1].first != -1) return dp[curr][prev + 1];
-
-        int length = 0, count = 0;
-
-        if (prev == -1 || nums[prev] < nums[curr]){
-            pair<int, int> include = solveMem(nums, curr + 1, curr, dp);
-            int includeLength = 1 + include.first;
-            if (includeLength > length){
-                length = includeLength;
-                count = include.second;
-            } 
+    pair<int,int> solve(int i,int prev,vector<int>& nums,vector<vector<pair<int,int>>>&dp,int &n)
+    {
+        if(i==n) return{0,1};
+        if(dp[i][prev+1].second!=-1) return dp[i][prev+1];
+        int length=0,count=0;
+        if(prev==-1 || nums[i]>nums[prev])
+        {
+            pair<int,int> take=solve(i+1,i,nums,dp,n);
+            length=take.first+1;
+            count=take.second;
         }
-
-        pair<int, int> exclude = solveMem(nums, curr + 1, prev, dp);
-        if (exclude.first > length){
-            length = exclude.first;
-            count = exclude.second;
-        } 
-        else if (exclude.first == length){
-            count += exclude.second;
+        pair<int,int> donttake=solve(i+1,prev,nums,dp,n);
+        if(donttake.first>length)
+        {
+            length=donttake.first;
+            count=donttake.second;
+        }else if(donttake.first==length)
+        {
+            count+=donttake.second;
         }
-
-        dp[curr][prev + 1] = make_pair(length, count);
-
-        return dp[curr][prev + 1];
+        return dp[i][prev+1]={length,count};
     }
     int findNumberOfLIS(vector<int>& nums) {
-        int curr = 0, prev = -1;
-        vector<vector<pair<int, int>>> dp(nums.size(), vector<pair<int, int>>(nums.size() + 1, make_pair(-1, -1)));
-        pair<int, int> result = solveMem(nums, curr, prev, dp);
-        return result.second;
+        int n=nums.size();
+        vector<vector<pair<int,int>>> dp(n,vector<pair<int,int>>(n+1,{-1,-1}));
+        return solve(0,-1,nums,dp,n).second;  
     }
 };

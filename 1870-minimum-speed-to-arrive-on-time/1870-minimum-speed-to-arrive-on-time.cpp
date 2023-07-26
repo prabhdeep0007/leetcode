@@ -1,11 +1,7 @@
 class Solution {
 public:
     int minSpeedOnTime(vector<int>& arr, double hour) {
-        int ans=INT_MAX,maxi=arr[0],n=arr.size();
-        for(int i=1;i<arr.size();i++)
-        {
-            maxi=max(arr[i],maxi);
-        }
+        int ans=-1,n=arr.size();
         int l=1,h=1e7;
         while(l<=h)
         {
@@ -26,6 +22,6 @@ public:
                 ans=m;
             }
         }
-        return ans==INT_MAX?-1:ans;
+        return ans;
     }
 };

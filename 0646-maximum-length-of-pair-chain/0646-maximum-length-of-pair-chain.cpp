@@ -8,12 +8,9 @@ public:
     int findLongestChain(vector<vector<int>>& pairs) {
         int n=pairs.size();
         sort(pairs.begin(),pairs.end(),cmp);
-        int maxi=0;
-        for(int i=0;i<n;i++)
-        {
             int count=1;
-            int ti=i;
-            int j=i+1;
+            int i=0;
+            int j=1;
             while(j<n)
             {
                 if(pairs[i][1]<pairs[j][0])
@@ -22,9 +19,7 @@ public:
                     i=j;
                 }
                 j++;
-            }
-            maxi=max(count,maxi);
-        }
-        return maxi;
+            }        
+        return count;
     }
 };

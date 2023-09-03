@@ -14,7 +14,6 @@ public:
     }
     
     int uniquePaths(int m, int n) {
-        vector<vector<int>> dp(m,vector<int>(n,-1));
         vector<int> curr(n,0);
         vector<int> next(n,0);
         for(int i=m-1;i>=0;i--){

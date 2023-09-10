@@ -1,14 +1,18 @@
 class Solution {
 public:
-    
-   int mod=1e9+7;
-
-   int countOrders(int n) {
-        long long ans = 1;
-        for (int i = 1; i <= n; i++) {
-            ans = (ans * i)%mod;
-            ans = (ans * (2 * i - 1))%mod;
+    int countOrders(int n) {
+        int MOD=1e9+7;
+        vector<long long> dp(n+1,0);
+        dp[1]=1;
+        if(n==1)
+            return 1;
+        dp[2]=6;
+        for(int i=3;i<=n;i++){
+            int t=2*i-1;
+            dp[i]=t*(t+1)/2;
+            dp[i]=(dp[i]*dp[i-1])%MOD;
+            dp[i]=dp[i]%MOD;
         }
-        return ans;
+        return dp[n];
     }
 };

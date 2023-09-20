@@ -6,11 +6,12 @@ public:
         int maxlen=-1;
         for(auto i:nums) sum+=i;
         int l=0,r=0;
+        if(sum<x) return -1;
         while(r<nums.size())
         {
             currsum+=nums[r];
             
-            while(l<=r && currsum>sum-x) 
+            while(currsum>sum-x) 
             {
                 currsum-=nums[l];
                 l++;

@@ -1,36 +1,44 @@
 class Solution {
 public:
-    vector<vector<int>> updateMatrix(vector<vector<int>>& matrix) 
-    {
-       vector<vector<int>> dir={{1,0},{0,1},{0,-1},{-1,0}};
-        queue<pair<int,int>> q;
-        int m=matrix.size();
-        int n=matrix[0].size();
-        vector<vector<int>> dis(m,vector<int>(n,-1));
-        for(int i=0;i<m;i++)
-            for(int j=0;j<n;j++)
-            {
-                if(matrix[i][j]==0)
-                { 
-                    q.push({i,j});
-                    dis[i][j]=0;
-                }
-            }
-        while(!q.empty())
+    vector<vector<int>> updateMatrix(vector<vector<int>>& mat) {
+        int n=mat.size();
+        int m=mat[0].size();
+        queue<pair<pair<int,int>,int>> q;
+        vector<vector<int>> ans(n,vector<int>(m,0));
+         vector<vector<int>> vis(n,vector<int>(m,0));
+        for(int i=0;i<n;i++)
         {
-            pair<int,int> curr=q.front();
-            q.pop();
-            for(auto& x:dir)
+            for(int j=0;j<m;j++)
             {
-                int a=curr.first+x[0];
-                int b=curr.second+x[1];
-                if(!(a<0||b<0||a==m||b==n)&&dis[a][b]==-1)
+                if(mat[i][j]==0)
                 {
-                    q.push({a,b});
-                    dis[a][b]=dis[curr.first][curr.second]+1;
+                 vis[i][j]=1;
+                 q.push({{i,j},0});
                 }
             }
         }
-        return dis;
+        vector<int> x={1,-1,0,0};
+        vector<int> y={0,0,1,-1};
+
+        while(q.size())
+        {
+            int i=q.front().first.first;
+            int j=q.front().first.second;
+            int t=q.front().second;
+            ans[i][j]=t;
+            q.pop();
+            for(int k=0;k<4;k++)
+            {
+                int nx=i+x[k];
+                int ny=j+y[k];
+                if(nx>=0&&nx<n&&ny>=0&&ny<m&&!vis[nx][ny])
+                {
+                   q.push({{nx,ny},t+1});
+                    vis[nx][ny]=1;
+                }
+            }
+        }
+        
+        return ans;
     }
 };

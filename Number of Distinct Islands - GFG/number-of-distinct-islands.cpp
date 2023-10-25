@@ -15,8 +15,8 @@ class Solution {
      vector<int> y={1,-1,0,0};
      int a=i-i0;
      int b=j-j0;
-     temp+=to_string(a);
-     temp+=to_string(b);
+     temp+=a;
+     temp+=b;
      for(int k=0;k<4;k++)
      {
          int nx=i+x[k];

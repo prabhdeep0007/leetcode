@@ -1,38 +1,31 @@
 class Solution {
 public:
-    bool cycleDetect(unordered_map<int,vector<int>> &graph,int idx,vector<bool>&pathVisited,vector<bool>&visited){
-        if(pathVisited[idx]){
-            return true;
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        unordered_map<int,vector<int>> m;
+        vector<int> indegree(numCourses,0);
+        for(auto v:prerequisites)
+        {
+            m[v[1]].push_back(v[0]);
+            indegree[v[0]]++;
         }
-        visited[idx]=true;
-        pathVisited[idx]=true;
-        for(int ele:graph[idx]){
-            if(!visited[ele]&&cycleDetect(graph,ele,pathVisited,visited))
-                return true;
-            else if(pathVisited[ele])
-                return true;
+        queue<int> q;
+        for(int i=0;i<numCourses;i++)
+        {
+            if(indegree[i]==0) q.push(i);
         }
-        pathVisited[idx]=false;
-        return false;
-        
-    }
-    
-    bool canFinish(int numCourses, vector<vector<int>>& pre) {
-        unordered_map<int,vector<int>> graph;
-        for(auto p:pre){
-            graph[p[0]].push_back(p[1]);
-        }
-       
-            vector<bool> pathVisited(numCourses,false);
-        vector<bool> visited(numCourses,false);
-        for(int i=0;i<numCourses;i++){
-            
-            if(!visited[i]&&cycleDetect(graph,i,pathVisited,visited)){
-                return false;
+        int count=0;
+        while(q.size())
+        {
+            int temp=q.front();
+            q.pop();
+            count++;
+            for(auto i:m[temp])
+            {
+                indegree[i]--;
+                if(indegree[i]==0) q.push(i);
             }
-
         }
-        return true;
+        return count==numCourses;
         
     }
 };

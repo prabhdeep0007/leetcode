@@ -1,41 +1,42 @@
 class Solution {
 public:
-    void tellSecret(int person,unordered_map<int,vector<int>> &g, vector<bool>&visited,unordered_set<int> &s){
-        for(int ele:g[person]){
-            if(!visited[ele]){
-                s.insert(ele);
-                visited[ele]=true;
-                tellSecret(ele,g,visited,s);
-            }
-        }
-    }
+   void dfs(unordered_map<int,vector<int>> &m,int i,unordered_set<int> &s,vector<bool>&vis)
+   {
+       s.insert(i);
+       vis[i]=1;
+       for(auto &j:m[i])
+       {
+           if(not(vis[j]))dfs(m,j,s,vis);
+       }
+   }
     vector<int> findAllPeople(int n, vector<vector<int>>& meetings, int firstPerson) {
-        
-        // sort(meetings.begin(),meetings.end(), comparator);
-        map<int,vector<pair<int,int>>> m;
-        for(auto v:meetings){
-            m[v[2]].push_back({v[0],v[1]});
-        }
-        
         unordered_set<int> s;
+        map<int,vector<pair<int,int>>> m;
         s.insert(0);
         s.insert(firstPerson);
-        for(auto &[time,v]:m){
+        for(auto &v:meetings)
+        {
+            m[v[2]].push_back({v[1],v[0]});
+        }
+        for(auto &[a,b]:m)
+        {
             unordered_map<int,vector<int>> g;
-            for(auto &[a,b]:v){
-                g[a].push_back(b);
-                g[b].push_back(a);
+            vector<bool> vis(n,0);
+            for(auto &[c,d]:b)
+            {
+                g[c].push_back(d);
+                g[d].push_back(c);
             }
-            vector<bool> visited(n,false);
-            for(auto &[person,v]:g){
-                if(!visited[person]&&s.find(person)!=s.end()){
-                    tellSecret(person,g,visited,s);
+            for(auto &i:g)
+            {
+                if( not(s.find(i.first)==s.end())&&not(vis[i.first]))
+                {
+                    dfs(g,i.first,s,vis);
                 }
             }
         }
         vector<int> ans;
-        for(int ele:s) ans.push_back(ele);
-        return ans;
-        
+        for(auto&i:s) ans.push_back(i);
+            return ans;
     }
 };

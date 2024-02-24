@@ -11,28 +11,21 @@ public:
    }
     vector<int> findAllPeople(int n, vector<vector<int>>& meetings, int firstPerson) {
         unordered_set<int> s;
-        map<int,vector<pair<int,int>>> m;
+        map<int,unordered_map<int,vector<int>>> m;
         s.insert(0);
         s.insert(firstPerson);
         for(auto &v:meetings)
         {
-            m[v[2]].push_back({v[1],v[0]});
+            m[v[2]][v[1]].push_back(v[0]);
+            m[v[2]][v[0]].push_back(v[1]);
         }
-        for(auto &[a,b]:m)
+        for(auto i:m)
         {
-            unordered_map<int,vector<int>> g;
             vector<bool> vis(n,0);
-            for(auto &[c,d]:b)
+            for(auto j:i.second)
             {
-                g[c].push_back(d);
-                g[d].push_back(c);
-            }
-            for(auto &i:g)
-            {
-                if( not(s.find(i.first)==s.end())&&not(vis[i.first]))
-                {
-                    dfs(g,i.first,s,vis);
-                }
+                if(not(s.find(j.first)==s.end())&&not(vis[j.first]))
+                    dfs(i.second,j.first,s,vis);
             }
         }
         vector<int> ans;
